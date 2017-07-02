@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Wordnet Disco Sems</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Textb1</th>
+      <th>Textb2</th>
+      <th>Disco result</th>
+      <th>Wordnet result</th>
+      <th>Tfidf</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @wordnet_disco_sems.each do |wordnet_disco_sem| %>
+      <tr>
+        <td><%= wordnet_disco_sem.textb1 %></td>
+        <td><%= wordnet_disco_sem.textb2 %></td>
+        <td><%= wordnet_disco_sem.disco_result %></td>
+        <td><%= wordnet_disco_sem.wordnet_result %></td>
+        <td><%= wordnet_disco_sem.tfidf %></td>
+        <td><%= link_to 'Show', wordnet_disco_sem %></td>
+        <td><%= link_to 'Edit', edit_wordnet_disco_sem_path(wordnet_disco_sem) %></td>
+        <td><%= link_to 'Destroy', wordnet_disco_sem, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Wordnet Disco Sem', new_wordnet_disco_sem_path %>

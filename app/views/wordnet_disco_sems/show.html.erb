@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Textb1:</strong>
+  <%= @wordnet_disco_sem.textb1 %>
+</p>
+
+<p>
+  <strong>Textb2:</strong>
+  <%= @wordnet_disco_sem.textb2 %>
+</p>
+
+<p>
+  <strong>Disco result:</strong>
+  <%= @wordnet_disco_sem.disco_result %>
+</p>
+
+<p>
+  <strong>Wordnet result:</strong>
+  <%= @wordnet_disco_sem.wordnet_result %>
+</p>
+
+<p>
+  <strong>Tfidf:</strong>
+  <%= @wordnet_disco_sem.tfidf %>
+</p>
+
+<%= link_to 'Edit', edit_wordnet_disco_sem_path(@wordnet_disco_sem) %> |
+<%= link_to 'Back', wordnet_disco_sems_path %>

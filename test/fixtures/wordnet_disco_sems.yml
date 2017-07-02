@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  textb1: MyText
+  textb2: MyText
+  disco_result: MyString
+  wordnet_result: MyString
+  tfidf: MyString
+
+two:
+  textb1: MyText
+  textb2: MyText
+  disco_result: MyString
+  wordnet_result: MyString
+  tfidf: MyString

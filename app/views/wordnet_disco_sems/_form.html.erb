@@ -1,0 +1,54 @@
+<%= form_for(wordnet_disco_sem) do |f| %>
+  <% if wordnet_disco_sem.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(wordnet_disco_sem.errors.count, "error") %> prohibited this wordnet_disco_sem from being saved:</h2>
+
+      <ul>
+      <% wordnet_disco_sem.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :textb1 %>
+    <%= f.text_area :textb1 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :textb2 %>
+    <%= f.text_area :textb2 %>
+  </div>
+
+  <!-- <div class="field">
+    <%= f.label :disco_result %>
+    <%= f.text_field :disco_result %>
+  </div>
+
+  <div class="field">
+    <%= f.label :wordnet_result %>
+    <%= f.text_field :wordnet_result %>
+  </div>
+
+  <div class="field">
+    <%= f.label :tfidf %>
+    <%= f.text_field :tfidf %>
+  </div>
+ -->
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<!-- <html>
+    <head>
+        
+        <style>
+            textarea { width: 100%; height: 75px }
+        </style>
+    </head>
+    <body>
+        <textarea class="comments"></textarea>
+    </body>
+</html> -->
