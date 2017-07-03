@@ -1,3 +1,4 @@
+from nltk.corpus import wordnet as wn
 from collections import OrderedDict
 from scipy import spatial
 import numpy as np
@@ -60,16 +61,16 @@ def df():
 
 #####################################################################calculate tfidf
 
-final_tfidf_dic = {}							    #final tfidfs for textbox 1 and 2
+final_tfidf_dic = {}							    		#final tfidfs for textbox 1 and 2
 
-# df()                                                #calling the df to calculate df
+# df()                                                		#calling the df to calculate df
 
 def tfidf(wordlist):
-	# for docsword in docWordList:				    #each doc
-	tfidfList = {}									#dic that has words and tfidf  (result)
-	for word in wordlist:					        #each word in doc to claculate tfidf
-		tf = wordlist.count(word)     #term frequency
-		df = allWordList_Dup.count(word)              #doc frequency
+	# for docsword in docWordList:				    		#each doc
+	tfidfList = {}											#dic that has words and tfidf  (result)
+	for word in wordlist:					    		    #each word in doc to claculate tfidf
+		tf = wordlist.count(word)     						#term frequency
+		df = allWordList_Dup.count(word)              		#doc frequency
 		_tfidf = (1 + math.log10(tf)) * (math.log10(2/df))
 		tfidfList[word] = round(_tfidf,5)
 	
@@ -82,12 +83,14 @@ def tfidf(wordlist):
 #####################function that get two words and return similarity using WORDNET
 
 def wordnet(word1, word2):					
-	w1 = wordnet.synsets(word1)
-	w2 = wordnet.synsets(word2)
+	w1 = wn.synsets(word1)
+	w2 = wn.synsets(word2)
 	if w1 and w2: 
 		s = w1[0].wup_similarity(w2[0])
+		print(word1," and ",word2,"  wordnet is " + str(s))
 		return s
-	else
+	else:
+		print("wordnet can not find any similarity")
 		return 0
 
 ####################################################################################
@@ -97,21 +100,21 @@ def wordnet(word1, word2):
 def disco(word1, word2):
 	s = str("java -jar disco-2.1.jar enwiki-20130403-word2vec-lm-mwl-lc-sim/ -s2 " + word1 + " " + word2)
 	(a, b) = commands.getstatusoutput(s)
-	print(w + " disco is " + b)
+	print(word1," and ",word2,"  disco is " + b)
 	return b
 
 ####################################################################################
 
 #########################################################calculate wordnet and disco
 
-firstmap = tfidf(tb1_word)                          #first textboxes tfidfs
-secondmap = tfidf(tb2_word)                         #second textboxes tfidfs
+firstmap = tfidf(tb1_word)                          		#first textboxes tfidfs
+secondmap = tfidf(tb2_word)                       		  	#second textboxes tfidfs
 
 def wordnet_disco_semantic():
 	tb1_d 		= []										#list that contains similarity numbers in textbox1 for disco
 	tb2_d 		= []										#list that contains similarity numbers in textbox2 for disco
 	tb1_w 		= []										#list that contains similarity numbers in textbox1 for wordnet
-	tb2_w    	= []										#list that contains similarity numbers in textbox1 for wordnet
+	tb2_w    	= []										#list that contains similarity numbers in textbox2 for wordnet
 
 	avg_disco   = 0
 	avg_wordnet = 0
@@ -119,28 +122,34 @@ def wordnet_disco_semantic():
 	
 	for w in allWordList:
 		if w not in tb1_word:								#word that is in textbox2 is not in textbox1
-			for ww in tb2_word:
-				disco_n      = disco(w, ww)                 #calling disco func
+			for ww in tb1_word:
+				disco_n      = disco(w, ww)			        #calling disco func
 				wordnet_n    = wordnet(w, ww)				#calling wordnet func
-				avg_disco   += float(disco_n)
-				avg_wordnet += float(wordnet_n)
+				avg_disco   += round(float(disco_n),2)
+				avg_wordnet += round(float(wordnet_n),2)
 				count 		+= 1
 
-			tb1_d.append(float(avg_disco/count))
-			tb1_w.append(float(avg_wordnet/count))
+			tb1_d.append(round(float(avg_disco/count),2))
+			tb1_w.append(round(float(avg_wordnet/count),2))
+
+			tb2_d.append(float(secondmap[w]))
+			tb2_w.append(float(secondmap[w]))
 			avg = 0
 			count = 0
 
-		else if w not in tb2_word:							#word that is in textbox1 is not in textbox2
-			for ww in tb1_word:
-				disco_n      = disco(w, ww)                 #calling disco func
+		elif w not in tb2_word:								#word that is in textbox1 is not in textbox2
+			for ww in tb2_word:
+				disco_n      = disco(w, ww)         		#calling disco func
 				wordnet_n    = wordnet(w, ww)				#calling wordnet func
-				avg_disco   += float(disco_n)
-				avg_wordnet += float(wordnet_n)
+				avg_disco   += round(float(disco_n),2)
+				avg_wordnet += round(float(wordnet_n),2)
 				count 		+= 1
 
-			tb2_d.append(float(avg_disco/count))
-			tb2_w.append(float(avg_wordnet/count))
+			tb2_d.append(round(float(avg_disco/count),2))
+			tb2_w.append(round(float(avg_wordnet/count),2))
+
+			tb1_d.append(float(firstmap[w]))
+			tb1_w.append(float(firstmap[w]))
 			avg = 0
 			count = 0
 
@@ -155,42 +164,6 @@ def wordnet_disco_semantic():
 	_print("tb2_disco"  , tb2_d)
 	_print("tb1_wordnet", tb1_w)
 	_print("tb2_wordnet", tb2_w)
-
-		
-		# # this section is if word is in first texboxes(firstmap) thats 
-		# if w in firstmap:
-		# 	tb1_d.append(float(firstmap[w]))
-		# else:
-		# 	for ww in allWordList:
-		# 		if w in secondmap:
-		# 			disco_n   = disco(w, ww)                #calling disco func
-		# 			wordnet_n = wordnet(w, ww)				#calling wordnet func
-					
-		# 			avg_disco   += float(disco_n)
-		# 			avg_wordnet += float(wordnet_n)
-		# 			count += 1
-		# 	tb1_d.append(float(avg/count))
-		# 	avg = 0
-		# 	count = 0
-		# count = 0
-		# avg = 0
-		
-		# if w in secondmap:
-		# 	tb2_d.append(float(secondmap[w]))
-		# else:
-		# 	for ww in allWordList:
-		# 		if w in firstmap:
-		# 			s = str("java -jar disco-2.1.jar enwiki-20130403-word2vec-lm-mwl-lc-sim/ -s2 " + w + " " + ww)
-		# 			(aaaa, bbbb) = commands.getstatusoutput(s)
-		# 			print(w + " disco is " + bbbb)
-		# 			count += 1
-		# 			avg+=float(bbbb)
-		# 	tb2_d.append(float(avg/count))
-		# 	count = 0
-		# 	avg = 0
-
-	# _print("tb1_d", tb1_d)
-	# _print("tb2_d", tb2_d)
 
 	disco_cosine   = 0
 	wordnet_cosine = 0
@@ -208,19 +181,19 @@ def wordnet_disco_semantic():
 	_print("cosine of disco result"  , str(disco_cosine))
 	_print("cosine of wordnet result", str(wordnet_cosine))
 
-	sql_wordnet = 'UPDATE wordnet_disco_sems set wordnet_result=\"'+str(r)+'\" WHERE id='+str(row_id)
-	sql_disco   = 'UPDATE wordnet_disco_sems set disco_result=\"'+str(r)+'\" WHERE id='+str(row_id)
+	sql_disco   = 'UPDATE wordnet_disco_sems set disco_result=\"'+str(disco_cosine)+'\" WHERE id='+str(row_id)
+	sql_wordnet = 'UPDATE wordnet_disco_sems set wordnet_result=\"'+str(wordnet_cosine)+'\" WHERE id='+str(row_id)
 	
-	cur.execute(sql_wordnet);
 	cur.execute(sql_disco);
+	cur.execute(sql_wordnet);
 
 ####################################################################################
 
 
 ###################################################################calling functions
 
-# tfidf()											#callnin tfidf to calculate
-wordnet_disco_semantic()								#claculate disco semantic similarity
+# tfidf()													#callnin tfidf to calculate
+wordnet_disco_semantic()									#claculate disco semantic similarity
 
 cur.close()
 conn.close()
